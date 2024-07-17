@@ -38,5 +38,20 @@ def predict_api():
     except Exception as e:
         return jsonify({'error': str(e)})
 
+@app.route('/predict',methods=['POST'])
+def predict():
+    data=[float(x)for x in request.form.values()]
+    final_input=scalar.transform(np.array(data).reshape(1,-1))
+    print(final_input)
+    output=regmodel.predict(final_input)[0]
+
+    if output==1:
+        prediction_text="The person has heart disease"
+    else:
+        prediction_text="The person does not have heart disease"
+    return render_template("home.html",prediction_text=prediction_text)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
